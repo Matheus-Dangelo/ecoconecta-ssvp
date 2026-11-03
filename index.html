@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoConecta SSVP - Protótipo Interativo</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ssvp: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Garantia de área de toque mínima de 44x44px para acessibilidade (WCAG AA) */
+        .min-touch { min-height: 44px; min-width: 44px; }
+    </style>
+</head>
+<body class="h-full bg-slate-100 text-slate-800 flex flex-col justify-between">
+
+    <!-- Header / Barra Superior Global -->
+    <header class="bg-ssvp-800 text-white shadow-md">
+        <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <svg class="w-7 h-7 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="font-bold text-lg tracking-wide">EcoConecta SSVP</span>
+            </div>
+            <!-- Status Bar / Conexão Offline-First -->
+            <div id="connection-status" class="flex items-center space-x-1.5 bg-emerald-700/80 px-2.5 py-1 rounded-full text-xs font-medium border border-emerald-600 shadow-inner" title="Status da Sincronização e Conexão">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Modo Offline (Hive)</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container / Telas do Protótipo -->
+    <main class="flex-1 max-w-md w-full mx-auto p-4 flex flex-col justify-center">
+
+        <!-- TELA 1: Menu Inicial e Autenticação -->
+        <section id="screen-1" class="screen-view bg-white p-6 rounded-2xl shadow-xl border border-slate-200">
+            <div class="text-center mb-6">
+                <div class="inline-flex p-3 bg-ssvp-50 text-ssvp-700 rounded-full mb-2">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold text-slate-900">Acesso Restrito</h1>
+                <p class="text-sm text-slate-600 mt-1">Identifique-se para gerenciar o estoque e a triagem comunitária.</p>
+            </div>
+
+            <form id="login-form" onsubmit="event.preventDefault(); navigateTo('screen-2');" class="space-y-4">
+                <div>
+                    <label for="username" class="block text-sm font-semibold text-slate-700 mb-1">Usuário / Operador</label>
+                    <input type="text" id="username" required value="voluntario.sao_vicente" class="w-full px-3.5 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-ssvp-600 focus:outline-none text-slate-800 min-touch" placeholder="Ex: voluntario.sao_vicente">
+                </div>
+
+                <div>
+                    <label for="password" class="block text-sm font-semibold text-slate-700 mb-1">Senha Segura</label>
+                    <input type="password" id="password" required value="••••••••" class="w-full px-3.5 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-ssvp-600 focus:outline-none text-slate-800 min-touch" placeholder="Sua senha de acesso">
+                </div>
+
+                <button type="submit" class="w-full bg-ssvp-600 hover:bg-ssvp-700 active:bg-ssvp-800 text-white font-semibold py-3 px-4 rounded-xl shadow-lg transition duration-200 min-touch flex items-center justify-center space-x-2">
+                    <span>Entrar no Sistema</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+            </form>
+
+            <div class="mt-6 border-t border-slate-100 pt-4 text-center">
+                <span class="text-xs text-slate-500 block mb-2">Acesso rápido aos módulos do protótipo:</span>
+                <div class="flex justify-center space-x-2">
+                    <button onclick="navigateTo('screen-2')" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2 px-3 rounded-lg min-touch">Ir para Cadastro</button>
+                    <button onclick="navigateTo('screen-3')" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2 px-3 rounded-lg min-touch">Ver Alertas</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TELA 2: Formulário Operacional e Execução Central (Estoque / E-Lixo) -->
+        <section id="screen-2" class="screen-view hidden bg-white p-6 rounded-2xl shadow-xl border border-slate-200">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-slate-900">Registro Operacional</h2>
+                <span class="text-xs bg-amber-100 text-amber-800 font-semibold px-2.5 py-1 rounded-full border border-amber-300">Pendente de Sincronização</span>
+            </div>
+            <p class="text-xs text-slate-600 mb-4">Insira os dados do suprimento assistencial ou triagem de e-lixo para gravação local segura.</p>
+
+            <form id="operation-form" onsubmit="event.preventDefault(); alertCustom('Registro gravado com sucesso no Hive (Offline-First)!'); navigateTo('screen-3');" class="space-y-4">
+                <div>
+                    <label for="module-type" class="block text-sm font-semibold text-slate-700 mb-1">Módulo de Atendimento</label>
+                    <select id="module-type" class="w-full px-3.5 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-ssvp-600 focus:outline-none text-slate-800 bg-white min-touch">
+                        <option value="elixo">Triagem de E-Lixo (ODS 12.5)</option>
+                        <option value="medicamento">Farmacinha Comunitária (Remédios)</option>
+                        <option value="cesta">Estoque de Cestas Básicas</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="item-desc" class="block text-sm font-semibold text-slate-700 mb-1">Descrição / Categoria do Item</label>
+                    <input type="text" id="item-desc" required value="Computadores / Periféricos (Torre e Monitores)" class="w-full px-3.5 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-ssvp-600 focus:outline-none text-slate-800 min-touch" placeholder="Ex: Paracetamol 500mg ou Periféricos">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="item-qty" class="block text-sm font-semibold text-slate-700 mb-1">Peso (kg) / Qtd</label>
+                        <input type="number" id="item-qty" min="0.1" step="0.1" required value="12.5" class="w-full px-3.5 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-ssvp-600 focus:outline-none text-slate-800 min-touch">
+                    </div>
+                    <div>
+                        <label for="item-date" class="block text-sm font-semibold text-slate-700 mb-1">Data Validade</label>
+                        <input type="date" id="item-date" value="2027-12-31" class="w-full px-3.5 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-ssvp-600 focus:outline-none text-slate-800 min-touch">
+                    </div>
+                </div>
+
+                <div class="flex space-x-3 pt-2">
+                    <button type="button" onclick="navigateTo('screen-1')" class="w-1/3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3 px-2 rounded-xl min-touch">Voltar</button>
+                    <button type="submit" class="w-2/3 bg-ssvp-600 hover:bg-ssvp-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg min-touch flex items-center justify-center space-x-1">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        <span>Salvar Local</span>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- TELA 3: Painel de Alertas, Histórico e Sincronização -->
+        <section id="screen-3" class="screen-view hidden bg-white p-6 rounded-2xl shadow-xl border border-slate-200">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-slate-900">Alertas e Sincronização</h2>
+                <button onclick="syncToCloud()" class="text-xs bg-ssvp-600 hover:bg-ssvp-700 text-white font-semibold py-1.5 px-3 rounded-lg shadow min-touch flex items-center space-x-1">
+                    <svg class="w-4 h-4 animate-spin-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    <span id="sync-btn-text">Sincronizar Nuvem</span>
+                </button>
+            </div>
+
+            <!-- Cartão de Alerta Crítico (Texto + Símbolo + Cor - WCAG AA) -->
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-3.5 rounded-r-xl mb-4 shadow-sm">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 text-amber-600 mt-0.5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-bold text-amber-800">Atenção: Medicamento Próximo ao Vencimento</h3>
+                        <p class="text-xs text-amber-700 mt-0.5">Amoxicilina 500mg vence em 15 dias no estoque da Farmacinha (Lote #402).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Histórico Consolidado Recente -->
+            <div class="space-y-2 mb-6">
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Registros Pendentes na Fila Local</span>
+                
+                <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex justify-between items-center">
+                    <div>
+                        <p class="text-sm font-semibold text-slate-800">Triagem E-Lixo: Computadores</p>
+                        <p class="text-xs text-slate-500">12.5 kg • Registrado hoje às 11:15</p>
+                    </div>
+                    <span id="badge-status-1" class="text-xs bg-amber-100 text-amber-800 font-medium px-2 py-0.5 rounded border border-amber-300">Pendente</span>
+                </div>
+
+                <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex justify-between items-center">
+                    <div>
+                        <p class="text-sm font-semibold text-slate-800">Saída: Cesta Básica Família Lindeia</p>
+                        <p class="text-xs text-slate-500">1 Unidade • Registrado ontem</p>
+                    </div>
+                    <span id="badge-status-2" class="text-xs bg-emerald-100 text-emerald-800 font-medium px-2 py-0.5 rounded border border-emerald-300">Sincronizado</span>
+                </div>
+            </div>
+
+            <div class="flex space-x-3">
+                <button onclick="navigateTo('screen-2')" class="w-1/2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3 px-2 rounded-xl min-touch">Novo Registro</button>
+                <button onclick="logoutApp()" class="w-1/2 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-2 rounded-xl shadow min-touch">Sair (Logout)</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer / Barra de Alternância de Telas para Avaliação Rápida -->
+    <footer class="bg-white border-t border-slate-200 py-3 shadow-inner">
+        <div class="max-w-md mx-auto px-4 flex justify-around">
+            <button onclick="navigateTo('screen-1')" id="nav-btn-1" class="nav-tab px-3 py-2 rounded-lg text-xs font-semibold text-ssvp-700 bg-ssvp-50 min-touch transition">1. Login</button>
+            <button onclick="navigateTo('screen-2')" id="nav-btn-2" class="nav-tab px-3 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-100 min-touch transition">2. Cadastro</button>
+            <button onclick="navigateTo('screen-3')" id="nav-btn-3" class="nav-tab px-3 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-100 min-touch transition">3. Alertas</button>
+        </div>
+    </footer>
+
+    <!-- Modal de Mensagem Personalizada (Substitui alert padrão) -->
+    <div id="custom-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl border border-slate-200">
+            <h3 id="modal-title" class="text-lg font-bold text-slate-900 mb-2">Aviso EcoConecta</h3>
+            <p id="modal-text" class="text-sm text-slate-600 mb-4">Mensagem do sistema.</p>
+            <button onclick="closeModal()" class="w-full bg-ssvp-600 hover:bg-ssvp-700 text-white font-semibold py-2.5 rounded-xl min-touch">Entendido</button>
+        </div>
+    </div>
+
+    <!-- Script de Interatividade das Telas -->
+    <script>
+        function navigateTo(screenId) {
+            // Oculta todas as telas
+            document.querySelectorAll('.screen-view').forEach(el => el.classList.add('hidden'));
+            // Exibe a tela selecionada
+            document.getElementById(screenId).classList.remove('hidden');
+
+            // Atualiza abas do rodapé
+            document.querySelectorAll('.nav-tab').forEach(el => {
+                el.classList.remove('text-ssvp-700', 'bg-ssvp-50');
+                el.classList.add('text-slate-600', 'hover:bg-slate-100');
+            });
+
+            const activeBtnId = screenId === 'screen-1' ? 'nav-btn-1' : screenId === 'screen-2' ? 'nav-btn-2' : 'nav-btn-3';
+            const activeBtn = document.getElementById(activeBtnId);
+            activeBtn.classList.remove('text-slate-600', 'hover:bg-slate-100');
+            activeBtn.classList.add('text-ssvp-700', 'bg-ssvp-50');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function alertCustom(message) {
+            document.getElementById('modal-text').innerText = message;
+            document.getElementById('custom-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
+
+        function syncToCloud() {
+            const btnText = document.getElementById('sync-btn-text');
+            btnText.innerText = 'Sincronizando...';
+            setTimeout(() => {
+                document.getElementById('badge-status-1').className = 'text-xs bg-emerald-100 text-emerald-800 font-medium px-2 py-0.5 rounded border border-emerald-300';
+                document.getElementById('badge-status-1').innerText = 'Sincronizado';
+                document.getElementById('connection-status').innerHTML = '<span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span><span>Conectado (Supabase)</span>';
+                btnText.innerText = 'Sincronizado!';
+                alertCustom('Sincronização bidirecional realizada com sucesso! Os registros locais foram consolidados no PostgreSQL.');
+            }, 1000);
+        }
+
+        function logoutApp() {
+            alertCustom('Sessão encerrada com sucesso. Token JWT invalidado e cache sensível limpo.');
+            navigateTo('screen-1');
+        }
+    </script>
+</body>
+</html>
